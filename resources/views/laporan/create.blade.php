@@ -20,7 +20,7 @@
             <form action="{{ route('laporans.store') }}" method="post">
                 @csrf
                 <div class="field-group">
-                    <label for="nama">Nama pelapor</label>
+                    <label for="nama_pelapor">Nama pelapor</label>
                     <input id="nama_pelapor" type="text" name="nama_pelapor" value="{{ old('nama_pelapor') }}" maxlength="255" required>
                     @error('nama_pelapor') <small class="field-error">{{ $message }}</small> @enderror
                 </div>

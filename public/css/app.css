@@ -97,6 +97,12 @@ button:hover,
     background: #12645e;
 }
 
+button:focus-visible,
+.secondary-button:focus-visible {
+    outline: 2px solid #197c74;
+    outline-offset: 4px;
+}
+
 .report-details {
     margin: 0 0 24px;
     border-top: 1px solid #d8e3e1;

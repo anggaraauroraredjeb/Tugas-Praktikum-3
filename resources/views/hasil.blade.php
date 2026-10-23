@@ -1,14 +1,14 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Konfirmasi Laporan</title>
+@extends('layouts.app')
+
+@section('title', 'Konfirmasi Laporan')
+
+@push('styles')
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-</head>
-<body>
-    <main class="page-shell">
-        <section class="result-card">
+@endpush
+
+@section('content')
+    <section class="legacy-page">
+        <div class="result-card">
             <p class="eyebrow">Laporan Banjir</p>
             <h1>Laporan berhasil dikirim</h1>
             <p class="intro">Berikut data laporan yang telah Anda masukkan.</p>
@@ -29,7 +29,6 @@
             </dl>
 
             <a class="secondary-button" href="{{ url('/form') }}">Buat laporan baru</a>
-        </section>
-    </main>
-</body>
-</html>
+        </div>
+    </section>
+@endsection
