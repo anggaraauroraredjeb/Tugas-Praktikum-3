@@ -7,6 +7,19 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Praktikum LaporBanjir
+
+Fitur laporan warga menyimpan identitas kontak, wilayah, tinggi genangan, keterangan, dan foto bukti. Petugas yang sudah login dapat melihat laporan berhalaman, membuka detail, mengubah status (`Menunggu`, `Diproses`, atau `Selesai`), mengganti foto, dan menghapus laporan. Foto disimpan pada disk `public`; setelah mengubah skema jalankan `php artisan storage:link` agar foto dapat ditampilkan.
+
+Autentikasi menggunakan Laravel Breeze (`laravel/breeze`) dengan stack Blade. Controller session/register dan `LoginRequest` Breeze dipakai bersama halaman login/register berdesain portal, termasuk rate limiting login. Seluruh route pengelolaan laporan (`index`, `show`, `edit`, `update`, dan `destroy`) dilindungi middleware `auth`; form kirim laporan warga tetap dapat diakses tanpa login.
+
+Untuk database MySQL lokal, buat database `db_laporbanjir`, atur `DB_DATABASE`, `DB_USERNAME`, dan `DB_PASSWORD` di `.env`, lalu jalankan:
+
+```bash
+php artisan migrate
+php artisan storage:link
+```
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

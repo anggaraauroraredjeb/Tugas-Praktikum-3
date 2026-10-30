@@ -103,6 +103,7 @@ button:focus-visible {
     margin: 0 auto;
     padding: 54px 0 64px;
 }
+.page-content-wide { width: min(100% - 40px, 1200px); }
 
 .site-footer {
     border-top: 1px solid #e2eae8;
@@ -190,6 +191,42 @@ h1 {
 .list-summary h2 { margin: 0; color: #173c3a; font-size: 1rem; }
 .list-summary span { color: #60706f; font-size: 0.85rem; }
 
+.report-table-wrap { overflow-x: auto; }
+.report-table { width: 100%; min-width: 850px; border-collapse: collapse; text-align: left; }
+.report-table th,
+.report-table td { padding: 12px 10px; border-bottom: 1px solid #e4ecea; vertical-align: middle; }
+.report-table th { background: #f3f7f6; color: #394b4a; font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+.report-table td { color: #394b4a; font-size: 0.87rem; }
+.report-table tbody tr:last-child td { border-bottom: 0; }
+.table-primary-text,
+.table-secondary-text { display: block; }
+.table-primary-text { color: #263e3c; font-weight: 600; }
+.table-secondary-text,
+.table-muted { margin-top: 3px; color: #71807e; font-size: 0.8rem; }
+.table-photo-link { display: block; width: 68px; height: 58px; overflow: hidden; border-radius: 4px; background: #e8f3f1; }
+.table-photo { display: block; width: 100%; height: 100%; object-fit: cover; }
+.risk-badge,
+.workflow-badge { display: inline-flex; padding: 5px 8px; border-radius: 4px; font-size: 0.76rem; font-weight: 700; white-space: nowrap; }
+.risk-watch { background: #fff2d6; color: #8a5b00; }
+.risk-alert { background: #fde8e5; color: #a43d31; }
+.risk-danger { background: #b42318; color: #fff; }
+.workflow-pending { background: #e9edef; color: #52616a; }
+.workflow-processing { background: #dcefeb; color: #12645e; }
+.workflow-complete { background: #e5f3e8; color: #28643a; }
+.table-actions { display: flex; align-items: center; gap: 5px; }
+.table-actions form { margin: 0; }
+.table-action { display: inline-flex; min-height: 34px; align-items: center; justify-content: center; padding: 6px 9px; border: 0; border-radius: 4px; color: #fff; font: inherit; font-size: 0.8rem; font-weight: 700; text-decoration: none; white-space: nowrap; cursor: pointer; }
+.action-view { background: #197c74; }
+.action-view:hover { background: #12645e; }
+.action-edit { background: #d99700; }
+.action-edit:hover { background: #b77e00; }
+.action-delete { background: #c43d4b; }
+.action-delete:hover { background: #a82f3c; }
+.table-empty { padding: 38px 16px !important; text-align: center; }
+.table-empty strong,
+.table-empty span { display: block; }
+.table-empty span { margin-top: 6px; color: #71807e; }
+
 .report-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 145px 105px;
@@ -198,6 +235,7 @@ h1 {
     padding: 20px 22px;
     border-bottom: 1px solid #e4ecea;
 }
+.report-row.has-thumbnail { grid-template-columns: 88px minmax(0, 1fr) 145px 105px; }
 
 .report-row:last-child { border-bottom: 0; }
 .report-heading { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
@@ -231,6 +269,22 @@ h1 {
 .compact-heading { margin-bottom: 20px; }
 .form-card { padding: 28px; }
 .field-group { margin-bottom: 18px; }
+.field-group textarea,
+.field-group select { width: 100%; padding: 11px 12px; border: 1px solid #c8d5d3; border-radius: 4px; color: #263e3c; font: inherit; }
+.field-group textarea { resize: vertical; }
+.field-group input[type="file"] { display: block; width: 100%; margin-top: 7px; }
+.field-error { display: block; margin-top: 5px; color: #96372c; }
+.current-photo { margin: 8px 0 0; font-size: 0.88rem; }
+.current-photo a,
+.report-photo-link { color: #197c74; font-weight: 700; }
+.report-thumbnail { display: block; width: 88px; height: 72px; overflow: hidden; border-radius: 4px; background: #e8f3f1; }
+.report-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+.status-workflow { background: #e8f3f1; color: #12645e; }
+.report-photo-link { display: inline-flex; flex-direction: column; gap: 8px; margin-bottom: 20px; text-decoration: none; }
+.report-photo { display: block; width: min(100%, 560px); max-height: 420px; border-radius: 4px; object-fit: cover; }
+.report-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.danger-button { padding: 11px 16px; border: 1px solid #96372c; border-radius: 4px; background: #fff; color: #96372c; font: inherit; font-weight: 700; cursor: pointer; }
+.danger-button:hover { background: #fff0ee; }
 
 label,
 dt {
@@ -288,6 +342,7 @@ input:focus { outline: 2px solid #8fcac3; border-color: #197c74; }
     .site-nav button { padding: 6px 0; }
     .page-heading { align-items: flex-start; flex-direction: column; }
     .report-row { grid-template-columns: minmax(0, 1fr) auto; gap: 14px; padding: 17px; }
+    .report-row.has-thumbnail { grid-template-columns: 72px minmax(0, 1fr); }
     .report-water { grid-column: 1; }
     .report-row > .text-link { grid-column: 2; grid-row: 2; }
     .form-card { padding: 23px 20px; }

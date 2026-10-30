@@ -30,7 +30,7 @@
             </div>
         </header>
 
-        <main class="page-content">
+        <main @class(['page-content', 'page-content-wide' => request()->routeIs('home', 'laporans.index')])>
             @yield('content')
         </main>
 

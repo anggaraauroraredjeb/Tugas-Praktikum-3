@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\Laporan;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class LaporanTest extends TestCase
@@ -15,9 +17,12 @@ class LaporanTest extends TestCase
     {
         $response = $this->post(route('laporans.store'), [
             'nama_pelapor' => 'Siti Aminah',
+            'no_hp' => '081234567890',
             'lokasi' => 'Dayeuhkolot',
-            'tinggi_genangan' => 45,
+            'kecamatan' => 'Dayeuhkolot',
+            'tinggi_air' => 45,
             'tanggal_kejadian' => '2026-10-08',
+            'keterangan' => 'Air mulai masuk ke rumah.',
         ]);
 
         $response->assertOk()
@@ -27,10 +32,14 @@ class LaporanTest extends TestCase
 
         $this->assertDatabaseHas('laporan', [
             'nama_pelapor' => 'Siti Aminah',
+            'no_hp' => '081234567890',
             'lokasi' => 'Dayeuhkolot',
+            'kecamatan' => 'Dayeuhkolot',
             'tinggi_genangan' => 45,
         ]);
         $this->assertSame('2026-10-08', Laporan::firstOrFail()->tanggal_kejadian->format('Y-m-d'));
+        $this->assertSame('Menunggu', Laporan::firstOrFail()->status);
+        $this->assertSame(45, Laporan::firstOrFail()->tinggi_air);
     }
 
     public function test_index_displays_database_reports_with_each_flood_status(): void
@@ -51,7 +60,80 @@ class LaporanTest extends TestCase
             ->assertSee('Waspada')
             ->assertSee('Siaga')
             ->assertSee('Awas')
-            ->assertSee('3 laporan');
+            ->assertSee('3 laporan')
+            ->assertSee('<th scope="col">Aksi</th>', false)
+            ->assertSee('Edit')
+            ->assertSee('Hapus');
+    }
+
+    public function test_officers_can_edit_status_replace_photo_and_delete_report(): void
+    {
+        Storage::fake('public');
+        $oldPhoto = UploadedFile::fake()->create('old.jpg', 10, 'image/jpeg');
+        $oldPhotoPath = $oldPhoto->store('laporan', 'public');
+        $laporan = Laporan::create([
+            'nama_pelapor' => 'Warga',
+            'no_hp' => '081234567890',
+            'lokasi' => 'Dayeuhkolot',
+            'kecamatan' => 'Dayeuhkolot',
+            'tinggi_air' => 35,
+            'tinggi_genangan' => 35,
+            'tanggal_kejadian' => '2026-10-08',
+            'keterangan' => 'Air di jalan.',
+            'foto' => $oldPhotoPath,
+            'status' => 'Menunggu',
+        ]);
+
+        $this->get(route('laporans.edit', $laporan))
+            ->assertRedirect(route('login'));
+
+        $this->actingAs(User::factory()->create())
+            ->get(route('laporans.edit', $laporan))
+            ->assertOk()
+            ->assertSee('Diproses');
+
+        $this->put(route('laporans.update', $laporan), [
+            'nama_pelapor' => 'Warga',
+            'no_hp' => '081234567890',
+            'lokasi' => 'Dayeuhkolot',
+            'kecamatan' => 'Dayeuhkolot',
+            'tinggi_air' => 50,
+            'tanggal_kejadian' => '2026-10-08',
+            'keterangan' => 'Air bertambah.',
+            'status' => 'Diproses',
+        ])->assertRedirect(route('laporans.show', $laporan));
+
+        $this->assertTrue(Storage::disk('public')->exists($oldPhotoPath));
+        $this->assertDatabaseHas('laporan', [
+            'id' => $laporan->id,
+            'tinggi_air' => 50,
+            'status' => 'Diproses',
+        ]);
+
+        $newPhoto = UploadedFile::fake()->create('new.jpg', 10, 'image/jpeg');
+        $this->put(route('laporans.update', $laporan), [
+            'nama_pelapor' => 'Warga',
+            'no_hp' => '081234567890',
+            'lokasi' => 'Dayeuhkolot',
+            'kecamatan' => 'Dayeuhkolot',
+            'tinggi_air' => 50,
+            'tanggal_kejadian' => '2026-10-08',
+            'keterangan' => 'Air bertambah.',
+            'status' => 'Selesai',
+            'foto' => $newPhoto,
+        ])->assertRedirect(route('laporans.show', $laporan));
+
+        $laporan->refresh();
+        $this->assertFalse(Storage::disk('public')->exists($oldPhotoPath));
+        $this->assertTrue(Storage::disk('public')->exists($laporan->foto));
+
+        $newPhotoPath = $laporan->foto;
+        $this->delete(route('laporans.destroy', $laporan))
+            ->assertRedirect(route('laporans.index'))
+            ->assertSessionHas('success', 'Laporan berhasil dihapus.');
+
+        $this->assertFalse(Storage::disk('public')->exists($newPhotoPath));
+        $this->assertDatabaseMissing('laporan', ['id' => $laporan->id]);
     }
 
     public function test_legacy_form_and_result_use_the_shared_portal_shell(): void

@@ -24,8 +24,10 @@ class AuthenticationTest extends TestCase
 
         $this->post(route('laporans.store'), [
             'nama_pelapor' => 'Warga Bandung',
+            'no_hp' => '081234567890',
             'lokasi' => 'Dayeuhkolot',
-            'tinggi_genangan' => 35,
+            'kecamatan' => 'Dayeuhkolot',
+            'tinggi_air' => 35,
             'tanggal_kejadian' => '2026-10-08',
         ])->assertOk();
 
